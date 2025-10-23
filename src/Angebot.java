@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 public class Angebot {
@@ -5,6 +6,7 @@ public class Angebot {
     private double regulearpreis;
     private GregorianCalendar flugdatum;
     private String flugnummer;
+    Rabattstrategie rabattstrategie;
 
     public Angebot(double regulearpreis, GregorianCalendar flugdatum, String flugnummer) {
         this.regulearpreis = regulearpreis;
@@ -13,7 +15,25 @@ public class Angebot {
     }
 
     public void rabattstrategieWaehlen() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
+        String str = sdf.format(flugdatum.getTime());
 
+        if (flugdatum.equals("januar") || flugdatum.equals("april") || flugdatum.equals("oktober")) {
+            MaxiDiscount maxiDiscount = new MaxiDiscount("MaxiDiscount");
+        } else if (flugdatum.equals("februar") || flugdatum.equals("march")) {
+            MidiDiscount midiDiscount = new MidiDiscount("MidiDiscount");
+        } else {
+            ZeroDiscount zeroDiscount = new ZeroDiscount("ZeroDiscount");
+        }
+
+    }
+
+    public double getReduzierterPreis(double preis) {
+        return rabattstrategie.getReduzierterPreis(preis);
+    }
+
+    public double getReduzierterPreis() {
+        return regulearpreis;
     }
 
     public double getRegulearpreis() {
@@ -39,4 +59,6 @@ public class Angebot {
     public void setFlugnummer(String flugnummer) {
         this.flugnummer = flugnummer;
     }
+
+
 }

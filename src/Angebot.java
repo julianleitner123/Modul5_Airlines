@@ -12,20 +12,21 @@ public class Angebot {
         this.regulearpreis = regulearpreis;
         this.flugdatum = flugdatum;
         this.flugnummer = flugnummer;
+
+        rabattstrategieWaehlen();
     }
 
-    public void rabattstrategieWaehlen() {
+    private void rabattstrategieWaehlen() {
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM");
         String str = sdf.format(flugdatum.getTime());
 
-        if (flugdatum.equals("januar") || flugdatum.equals("april") || flugdatum.equals("oktober")) {
-            MaxiDiscount maxiDiscount = new MaxiDiscount("MaxiDiscount");
-        } else if (flugdatum.equals("februar") || flugdatum.equals("march")) {
-            MidiDiscount midiDiscount = new MidiDiscount("MidiDiscount");
+        if (str.equals("Januar") || str.equals("April") || str.equals("Oktober")) {
+            this.rabattstrategie = new MaxiDiscount("MaxiDiscount");
+        } else if (str.equals("Februar") || str.equals("März")) {
+            this.rabattstrategie = new MidiDiscount("MidiDiscount");
         } else {
-            ZeroDiscount zeroDiscount = new ZeroDiscount("ZeroDiscount");
+            this.rabattstrategie = new ZeroDiscount("ZeroDiscount");
         }
-
     }
 
     public double getReduzierterPreis(double preis) {
@@ -33,7 +34,7 @@ public class Angebot {
     }
 
     public double getReduzierterPreis() {
-        return regulearpreis;
+        return rabattstrategie.getReduzierterPreis(regulearpreis);
     }
 
     public double getRegulearpreis() {
@@ -60,5 +61,19 @@ public class Angebot {
         this.flugnummer = flugnummer;
     }
 
+    public void ausgeben() {
+        System.out.println(toString());
+    }
+
+    @Override
+    public String toString() {
+        return "Angebot{" +
+                "regulearpreis= " + regulearpreis +
+                "rabattierterpreis= " + rabattstrategie.getReduzierterPreis(regulearpreis) +
+                ", flugdatum= " + flugdatum +
+                ", flugnummer='" + flugnummer + '\'' +
+                ", rabattstrategie= " + rabattstrategie +
+                '}';
+    }
 
 }
